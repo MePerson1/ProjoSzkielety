@@ -18,6 +18,7 @@ const RecipeForm = () => {
       is_private: false,
     },
   ]);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const handleAddIngredientInput = () => {
     let newfield = { name: "", quantity: 0, measure: "" };
@@ -83,7 +84,7 @@ const RecipeForm = () => {
     <>
       <div className="recipeForm">
         <form>
-          <label for="title">Tytuł:</label>
+          <label htmlFor="title">Tytuł:</label>
           <input
             id="title"
             type="text"
@@ -128,6 +129,7 @@ const RecipeForm = () => {
           {instructions.map((input, index) => {
             return (
               <div key={index}>
+                <label>{index + 1 + "."}</label>
                 <input
                   type="text"
                   name="name"
@@ -169,11 +171,10 @@ const RecipeForm = () => {
             {/* Przyw wyswietlaniu przepsu mozna dodac licznik w zaleznosci od miary :D */}
             <input
               id="privacy"
-              type="radio"
+              type="checkbox"
               name="privacy"
               value="private"
-              // checked={isPrivate}
-              // onChange={() => setIsPrivate(true)}
+              onChange={() => setIsPrivate(true)}
             />
             <label htmlFor="privacy">Private</label>
           </div>

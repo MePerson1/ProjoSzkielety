@@ -1,4 +1,3 @@
-// Importowanie niezbędnych modułów
 const express = require("express");
 const router = express.Router();
 const { Recipe, validate } = require("../models/recipe");

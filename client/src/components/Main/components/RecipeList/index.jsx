@@ -1,19 +1,23 @@
 import RecipeRow from "../RecipeRow";
 
+import styles from "./styles.module.css";
 const RecipeList = (props) => {
   const recipes = props.recipes;
-  const userName = props.userName;
+  const user = props.user;
   return (
     <>
-      {userName && <h2>{userName} przepisy</h2>}
-      {!userName && <h2>Przepisy</h2>}
-      <ul>
+      <div className={styles.heading}>
+        {user && <p>{user.name} przepisy</p>}
+        {!user && <p>Przepisy</p>}
+      </div>
+
+      <div>
         {recipes.map((recipe) => {
           return (
             <RecipeRow key={recipe._id} value={recipe._id} recipe={recipe} />
           );
         })}
-      </ul>
+      </div>
     </>
   );
 };

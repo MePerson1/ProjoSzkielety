@@ -3,6 +3,7 @@ const Joi = require("joi");
 const recipeSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
+  time: {},
   ingridients: [
     {
       name: { type: String, required: true },

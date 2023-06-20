@@ -1,5 +1,11 @@
-const RecipeRow = (props) => {
+const RecipeDetails = (props) => {
   const recipe = props.recipe;
-  return <li> {recipe.title} </li>;
+  return (
+    <>
+      <div>
+        <p>recipe.title</p>
+      </div>
+    </>
+  );
 };
-export default RecipeRow;
+export default RecipeDetails;

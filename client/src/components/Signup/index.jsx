@@ -4,8 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 const Signup = () => {
   const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     email: "",
     password: "",
   });
@@ -47,19 +46,10 @@ const Signup = () => {
             <h1>Create Account</h1>
             <input
               type="text"
-              placeholder="First Name"
-              name="firstName"
+              placeholder="User Name"
+              name="username"
               onChange={handleChange}
-              value={data.firstName}
-              required
-              className={styles.input}
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              name="lastName"
-              onChange={handleChange}
-              value={data.lastName}
+              value={data.username}
               required
               className={styles.input}
             />
@@ -92,4 +82,3 @@ const Signup = () => {
   );
 };
 export default Signup;
-

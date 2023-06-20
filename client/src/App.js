@@ -2,7 +2,8 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import Main from "./components/Main";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import RecipeForm from "./components/Main/components/RecipeForm";
+import "./App.css";
+
 function App() {
   const user = localStorage.getItem("token");
   return (

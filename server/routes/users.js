@@ -44,15 +44,9 @@ router.get("/", async (req, res) => {
     });
 });
 
-router.get("/info", async (req, res) => {
-  const user = req.user;
-  console.log(user);
-  res.status(200).send({ data: user, message: "Szczegóły użytkownika" });
-});
-
+//użytkownik po id
 router.get("/:id", async (req, res) => {
   try {
-    // Pobranie pojedynczego przepisu na podstawie identyfikatora (id)
     const user = await User.findById(req.params.id);
 
     if (user == null) {
@@ -65,6 +59,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//usuwanie użytkownika
 router.delete("/", async (req, res) => {
   const user = req.user;
   try {
@@ -75,6 +70,7 @@ router.delete("/", async (req, res) => {
   }
 });
 
+//dodanie przepisu do ulubionych
 router.post("/:userId/favorites/:recipeId", async (req, res) => {
   try {
     const userId = req.params.userId;

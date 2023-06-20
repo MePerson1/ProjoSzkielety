@@ -10,8 +10,43 @@ const Main = () => {
   const [userRecipes, setUserRecipes] = useState([]);
   const [info, ustawInfo] = useState(null);
   const [form, setForm] = useState(false);
-  const [user, setUser] = useState("Marian");
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    //pobierz token z localStorage:
+    const token = localStorage.getItem("token");
+    if (token) {
+      const url = "http://localhost:8080/api/users";
+      const headers = {
+        "Content-Type": "application/json",
+        "x-access-token": token,
+      };
+
+      axios
+        .get(url, { headers })
+        .then((response) => {
+          const res = response.data;
+          console.log(res);
+          setUser(res);
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.status >= 400 &&
+            error.response.status <= 500
+          ) {
+            console.log("nie dziala!");
+            localStorage.removeItem("token");
+            window.location.reload();
+          }
+        });
+      console.log(user);
+    }
+  }, []);
+
+  const handleGetUser = () => {
+    console.log("yey");
+  };
   const handleGetUsers = async (e) => {
     e.preventDefault();
     ustawInfo(null);
@@ -40,42 +75,6 @@ const Main = () => {
           error.response.status >= 400 &&
           error.response.status <= 500
         ) {
-          localStorage.removeItem("token");
-          window.location.reload();
-        }
-      }
-    }
-  };
-
-  const handleGetUser = async (e) => {
-    e.preventDefault();
-    ustawDane([]);
-    //pobierz token z localStorage:
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        console.log("");
-        //konfiguracja zapytania asynchronicznego z tokenem w nagłówku:
-        const config = {
-          method: "get",
-          url: "http://localhost:8080/api/users/info",
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": token,
-          },
-        };
-        //wysłanie żądania o dane:
-        const { data: res } = await axios(config);
-        //ustaw dane w komponencie za pomocą hooka useState na listę z danymi przesłanymi
-        //z serwera – jeśli został poprawnie zweryfikowany token
-        ustawInfo(res.data); // `res.data` - zawiera sparsowane dane – listę
-      } catch (error) {
-        if (
-          error.response &&
-          error.response.status >= 400 &&
-          error.response.status <= 500
-        ) {
-          console.log("nie dziala!");
           localStorage.removeItem("token");
           window.location.reload();
         }
@@ -220,11 +219,15 @@ const Main = () => {
           Wyloguj
         </button>
       </nav>
-      {dane.length > 0 ? <RecipeList recipes={dane} /> : <p></p>}
+      {dane.length > 0 ? (
+        <RecipeList className="bg-yellow" recipes={dane} />
+      ) : (
+        <p></p>
+      )}
       {info != null ? <Info info={info} /> : <p></p>}
       {form && <RecipeForm />}
       {userRecipes.length > 0 && (
-        <RecipeList recipes={userRecipes} userName={user} />
+        <RecipeList recipes={userRecipes} user={user} />
       )}
     </div>
   );
