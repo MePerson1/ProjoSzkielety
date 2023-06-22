@@ -3,7 +3,7 @@ const Joi = require("joi");
 const recipeSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  time: {},
+  time: { type: Number, required: true },
   ingridients: [
     {
       name: { type: String, required: true },
@@ -24,6 +24,7 @@ const validate = (data) => {
   const schema = Joi.object({
     title: Joi.string().required().label("Title"),
     description: Joi.string().required().label("Description"),
+    time: Joi.number().required(),
     ingridients: Joi.array().items(
       Joi.object({
         name: Joi.string().required(),

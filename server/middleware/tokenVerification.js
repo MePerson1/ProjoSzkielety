@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+
 function tokenVerification(req, res, next) {
   //pobranie tokenu z nagłówka:
   let token = req.headers["x-access-token"];
@@ -13,6 +14,7 @@ function tokenVerification(req, res, next) {
     }
     console.log("Token poprawny, użytkownik: " + decodeduser._id);
     req.user = decodeduser;
+    console.log(req.user);
     next();
   });
 }

@@ -16,7 +16,7 @@ const Main = () => {
     //pobierz token z localStorage:
     const token = localStorage.getItem("token");
     if (token) {
-      const url = "http://localhost:8080/api/users";
+      const url = "http://localhost:8080/api/users/info";
       const headers = {
         "Content-Type": "application/json",
         "x-access-token": token,
@@ -24,10 +24,11 @@ const Main = () => {
 
       axios
         .get(url, { headers })
-        .then((response) => {
-          const res = response.data;
-          console.log(res);
-          setUser(res);
+        .then((res) => {
+          const data = res.data;
+          console.log(data);
+          setUser(data);
+          console.log(user);
         })
         .catch((error) => {
           if (
@@ -44,9 +45,7 @@ const Main = () => {
     }
   }, []);
 
-  const handleGetUser = () => {
-    console.log("yey");
-  };
+  const handleGetUser = () => {};
   const handleGetUsers = async (e) => {
     e.preventDefault();
     ustawInfo(null);
@@ -140,7 +139,7 @@ const Main = () => {
         console.log(res.data);
         //ustaw dane w komponencie za pomocą hooka useState na listę z danymi przesłanymi
         //z serwera – jeśli został poprawnie zweryfikowany token
-        ustawDane(res.data); // `res.data` - zawiera sparsowane dane – listę
+        setUserRecipes(res.data); // `res.data` - zawiera sparsowane dane – listę
       } catch (error) {
         if (
           error.response &&
@@ -162,26 +161,23 @@ const Main = () => {
   const handleUserRecipes = async (e) => {
     e.preventDefault();
     setForm(false);
+
     //pobierz token z localStorage:
     const token = localStorage.getItem("token");
+
     if (token) {
       try {
-        console.log("");
         //konfiguracja zapytania asynchronicznego z tokenem w nagłówku:
         const config = {
           method: "get",
-          url: "http://localhost:8080/api/recipes",
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": token,
-          },
+          url: `http://localhost:8080/api/recipes/${user._id}/user`,
         };
         //wysłanie żądania o dane:
         const { data: res } = await axios(config);
         console.log(res.data);
         //ustaw dane w komponencie za pomocą hooka useState na listę z danymi przesłanymi
         //z serwera – jeśli został poprawnie zweryfikowany token
-        ustawDane(res.data); // `res.data` - zawiera sparsowane dane – listę
+        ustawDane(res.data);
       } catch (error) {
         if (
           error.response &&
@@ -189,8 +185,6 @@ const Main = () => {
           error.response.status <= 500
         ) {
           console.log("nie dziala!");
-          localStorage.removeItem("token");
-          window.location.reload();
         }
       }
     }
@@ -206,13 +200,13 @@ const Main = () => {
         <button className={styles.white_btn} onClick={handleGetRecipes}>
           Przepisy
         </button>
-        <button className={styles.white_btn} onClick={handleGetRecipes}>
+        <button className={styles.white_btn} onClick={handleUserRecipes}>
           Twoje przepisy
         </button>
         <button className={styles.white_btn} onClick={handleRecipeForm}>
           Dodaj przepis
         </button>
-        <button className={styles.white_btn} onClick={handleGetUser}>
+        <button className={styles.white_btn} onClick={console.log(user)}>
           Konto
         </button>
         <button className={styles.white_btn} onClick={handleLogout}>
@@ -225,7 +219,7 @@ const Main = () => {
         <p></p>
       )}
       {info != null ? <Info info={info} /> : <p></p>}
-      {form && <RecipeForm />}
+      {form && <RecipeForm user={user} />}
       {userRecipes.length > 0 && (
         <RecipeList recipes={userRecipes} user={user} />
       )}

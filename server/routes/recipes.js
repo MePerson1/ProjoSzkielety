@@ -1,5 +1,4 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 const { Recipe, validate } = require("../models/recipe");
 const { User } = require("../models/user");
 
@@ -7,14 +6,16 @@ const { User } = require("../models/user");
 router.post("/", async (req, res) => {
   try {
     // Walidacja danych wejściowych
+    console.log(req.body);
     const { error } = validate(req.body);
     if (error) {
+      console.log(error.details[0].message);
       return res.status(400).send({ message: error.details[0].message });
     }
-
+    console.log("test2");
     // Tworzenie nowego przepisu na podstawie danych z żądania
     const recipe = new Recipe(req.body);
-
+    console.log("test3");
     // Zapisanie przepisu w bazie danych
     await recipe.save();
 
@@ -55,13 +56,12 @@ router.get("/:id", async (req, res) => {
 });
 
 //Trasa do pobierania przepisów użytkownika
-router.get("/:userId/user", async (req, res) => {
+router.get("/:id/user", async (req, res) => {
   try {
-    const userId = req.params.userId;
-
+    let userId = req.params.id;
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send({ message: "No user found." });
+      return res.status(404).send({ message: "User not found" });
     }
 
     const recipes = await Recipe.find({ created_by: userId });
@@ -76,6 +76,7 @@ router.get("/:userId/user", async (req, res) => {
     res.status(500).send({ message: error });
   }
 });
+
 // Trasa do aktualizacji przepisu
 router.put("/:id", async (req, res) => {
   try {
@@ -94,9 +95,7 @@ router.put("/:id", async (req, res) => {
       return res.status(404).send({ message: "Recipe not found" });
     }
 
-    res
-      .status(200)
-      .send({ message: "Recipe updated successfully", data: recipe });
+    res.status(200).send(recipe);
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error" });
   }
