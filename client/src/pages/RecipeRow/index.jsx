@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const RecipeRow = ({ recipe, user, setRecipieDetails }) => {
+const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
   const tags = recipe.tags;
   let navigate = useNavigate();
   const handleDetails = () => {
@@ -44,7 +44,10 @@ const RecipeRow = ({ recipe, user, setRecipieDetails }) => {
     }
   };
 
-  const handleUpdateRecipe = async (e) => {};
+  const handleUpdateRecipe = async (e) => {
+    setRecipe(recipe);
+    navigate("/form");
+  };
   return (
     <div class="bg-slate-400 p-3 border border-2 border-black">
       <p>{recipe.title}</p>

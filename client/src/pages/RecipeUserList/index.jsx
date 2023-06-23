@@ -2,7 +2,7 @@ import RecipeRow from "../RecipeRow";
 import axios from "axios";
 import styles from "./styles.module.css";
 import { useEffect, useState } from "react";
-const RecipeUserList = ({ user, setRecipieDetails }) => {
+const RecipeUserList = ({ user, setRecipe, setRecipieDetails }) => {
   const [userRecipies, setUserRecipies] = useState(null);
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -50,6 +50,7 @@ const RecipeUserList = ({ user, setRecipieDetails }) => {
                 recipe={recipe}
                 user={user}
                 setRecipieDetails={setRecipieDetails}
+                setRecipe={setRecipe}
               />
             );
           })}

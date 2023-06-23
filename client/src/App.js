@@ -20,8 +20,8 @@ function App() {
 
   const [recipieDetails, setRecipieDetails] = useState(null);
   const [recipies, setRecipies] = useState(null);
-
   const [user, setUser] = useState(null);
+  const [recipe, setRecipe] = useState(null);
 
   useEffect(() => {
     console.log("");
@@ -75,6 +75,72 @@ function App() {
     }
   }, []);
 
+  const onSubmit = (recipe) => {
+    if (!recipe) {
+      return;
+    }
+    const token = localStorage.getItem("token");
+    const config = {
+      method: "post",
+      url: "http://localhost:8080/api/recipes",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token,
+      },
+      data: recipe,
+    };
+    axios(config)
+      .then((res) => {
+        setRecipe(null);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.status >= 400 &&
+          error.response.status <= 500
+        ) {
+          console.log("nie dziala!");
+          // localStorage.removeItem("token");
+          // window.location.reload();
+        }
+      });
+  };
+
+  const onUpdate = (recipe) => {
+    if (!recipe) {
+      return;
+    }
+    if (!recipe) {
+      return;
+    }
+    const token = localStorage.getItem("token");
+    const config = {
+      url: `http://localhost:8080/api/recipes/${recipe._id}`,
+      headers: {
+        "x-access-token": token,
+      },
+      data: recipe,
+    };
+    axios
+      .put(config)
+      .then((res) => {
+        setRecipe(null);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.status >= 400 &&
+          error.response.status <= 500
+        ) {
+          console.log("nie dziala!");
+          // localStorage.removeItem("token");
+          // window.location.reload();
+        }
+      });
+  };
+  const onClear = () => {
+    setRecipe(null);
+  };
   return (
     <>
       <header>
@@ -100,7 +166,11 @@ function App() {
           path="yours"
           exact
           element={
-            <RecipeUserList user={user} setRecipieDetails={setRecipieDetails} />
+            <RecipeUserList
+              user={user}
+              setRecipe={setRecipe}
+              setRecipieDetails={setRecipieDetails}
+            />
           }
         />
         <Route
@@ -108,7 +178,18 @@ function App() {
           exact
           element={<RecipeDetails recipieDetails={recipieDetails} />}
         />
-        <Route path="form" element={<RecipeForm user={user} />} />
+        <Route
+          path="form"
+          element={
+            <RecipeForm
+              onSubmit={onSubmit}
+              onClear={onClear}
+              onUpdate={onUpdate}
+              recipe={recipe}
+              user={user}
+            />
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

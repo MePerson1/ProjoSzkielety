@@ -12,10 +12,10 @@ router.post("/", async (req, res) => {
       console.log(error.details[0].message);
       return res.status(400).send({ message: error.details[0].message });
     }
-    console.log("test2");
+
     // Tworzenie nowego przepisu na podstawie danych z żądania
     const recipe = new Recipe(req.body);
-    console.log("test3");
+
     // Zapisanie przepisu w bazie danych
     await recipe.save();
 
@@ -78,24 +78,31 @@ router.get("/:id/user", async (req, res) => {
 });
 
 // Trasa do aktualizacji przepisu
-router.put("/:id", async (req, res) => {
+router.patch("/:id", async (req, res) => {
+  console.log(req.params.id);
+  console.log(req.data);
   try {
-    // Walidacja danych wejściowych
-    const { error } = validate(req.body);
-    if (error) {
-      return res.status(400).send({ message: error.details[0].message });
+    const recipeId = req.params.id; // ID of the recipe to update
+    const updatedRecipeData = req.data; // Updated recipe data
+
+    // Check if the updated recipe data is provided
+    if (!updatedRecipeData) {
+      return res
+        .status(400)
+        .send({ message: "Updated recipe data is required!" });
     }
 
-    // Aktualizacja przepisu na podstawie identyfikatora (id)
-    const recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    const recipe = await Recipe.findById(recipeId);
 
     if (!recipe) {
-      return res.status(404).send({ message: "Recipe not found" });
+      return res.status(404).send({ message: "Recipe not found!" });
     }
 
-    res.status(200).send(recipe);
+    // Update the recipe with the updated recipe data
+    Object.assign(recipe, updatedRecipeData);
+    const updatedRecipe = await recipe.save();
+
+    res.status(200).send({ updatedRecipe: updatedRecipe });
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error" });
   }

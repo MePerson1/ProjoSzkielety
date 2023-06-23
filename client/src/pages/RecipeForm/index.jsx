@@ -1,43 +1,67 @@
 import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import axios from "axios";
-const RecipeForm = ({ user }) => {
+const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
   const userId = user._id;
-  const [ingredients, setIngredients] = useState([
+  const [ingridients, setIngredients] = useState([
     { name: "", quantity: 0, measure: "" },
     { name: "", quantity: 0, measure: "" },
   ]);
   const [error, setError] = useState("");
-  const [instructions, setInstructions] = useState([""]);
+  const [instruction, setInstruction] = useState([""]);
   const [tags, setTags] = useState([""]);
-  const [recipe, setRecipe] = useState([
-    {
-      title: "",
-      description: "",
-      time: 0,
-      ingredients: [{ name: "", quantity: 0, measure: "" }],
-      instructions: [],
-      tags: [],
-      created_at: "",
-      created_by: "",
-      is_private: false,
-    },
-  ]);
+  // const [recipe, setRecipe] = useState([
+  //   {
+  //     title: "",
+  //     description: "",
+  //     time: 0,
+  //     ingredients: [{ name: "", quantity: 0, measure: "" }],
+  //     instructions: [],
+  //     tags: [],
+  //     created_at: "",
+  //     created_by: "",
+  //     is_private: false,
+  //   },
+  // ]);
   const [isPrivate, setIsPrivate] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [time, setTime] = useState(0);
-
+  const [id, setId] = useState(0);
+  const isUpdate = id !== 0;
+  useEffect(() => {
+    if (recipe) {
+      setId(recipe._id);
+      setTitle(recipe.title);
+      setDescription(recipe.description);
+      setTime(recipe.time);
+      setIngredients(recipe.ingridients);
+      setInstruction(recipe.instruction);
+      setTags(recipe.tags);
+      setIsPrivate(recipe.is_private);
+    } else {
+      setId(0);
+      setTitle("");
+      setDescription("");
+      setTime(0);
+      setIngredients([
+        { name: "", quantity: 0, measure: "" },
+        { name: "", quantity: 0, measure: "" },
+      ]);
+      setInstruction([""]);
+      setTags([""]);
+      setIsPrivate(false);
+    }
+  }, []);
   const handleAddIngredientInput = () => {
     let newfield = { name: "", quantity: 0, measure: "" };
-    setIngredients([...ingredients, newfield]);
-    console.log(ingredients);
+    setIngredients([...ingridients, newfield]);
+    console.log(ingridients);
   };
 
   const handleAddInstructionInput = () => {
     let newfield = "";
-    setInstructions([...instructions, newfield]);
-    console.log(instructions);
+    setInstruction([...instruction, newfield]);
   };
 
   const handleAddTagInput = () => {
@@ -47,15 +71,15 @@ const RecipeForm = ({ user }) => {
   };
 
   const handleIngridientsOnChange = (index, event) => {
-    let data = [...ingredients];
+    let data = [...ingridients];
     data[index][event.target.name] = event.target.value;
     setIngredients(data);
   };
 
   const handleInstructionsOnChange = (index, event) => {
-    let data = [...instructions];
+    let data = [...instruction];
     data[index] = event.target.value;
-    setInstructions(data);
+    setInstruction(data);
   };
 
   const handleTagsOnChange = (index, event) => {
@@ -65,15 +89,15 @@ const RecipeForm = ({ user }) => {
   };
 
   const removeIngridient = (index) => {
-    let data = [...ingredients];
+    let data = [...ingridients];
     data.splice(index, 1);
     setIngredients(data);
   };
 
   const removeInstraction = (index) => {
-    let data = [...instructions];
+    let data = [...instruction];
     data.splice(index, 1);
-    setInstructions(data);
+    setInstruction(data);
   };
 
   const removeTag = (index) => {
@@ -81,66 +105,92 @@ const RecipeForm = ({ user }) => {
     data.splice(index, 1);
     setTags(data);
   };
-  const handleChange = ({ currentTarget: input }) => {
-    setRecipe({ ...recipe, [input.name]: input.value });
+
+  const handleSubmit = () => {
+    const created_at = Date.now();
+    const created_by = userId;
+    const is_private = isPrivate;
+    onSubmit({
+      title,
+      description,
+      time,
+      ingridients,
+      instruction,
+      tags,
+      is_private,
+      created_at,
+      created_by,
+    });
+    // e.preventDefault();
+    // const dummyRecipe = {
+    //   title: title,
+    //   description: description,
+    //   time: time,
+    //   ingridients: ingredients,
+    //   instruction: instructions,
+    //   tags: tags,
+    //   created_at: Date.now(),
+    //   created_by: userId,
+    //   is_private: isPrivate,
+    // };
+
+    // console.log(dummyRecipe);
+    // const token = localStorage.getItem("token");
+    // try {
+    //   const config = {
+    //     method: "post",
+    //     url: "http://localhost:8080/api/recipes",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "x-access-token": token,
+    //     },
+    //     data: dummyRecipe,
+    //   };
+    //   const { data: res } = await axios(config);
+
+    //   console.log(res.message);
+    // } catch (error) {
+    //   if (
+    //     error.response &&
+    //     error.response.status >= 400 &&
+    //     error.response.status <= 500
+    //   ) {
+    //     setError(error.response.data.message);
+    //   }
+    // }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const dummyRecipe = {
-      title: recipe.title,
-      description: recipe.description,
-      time: recipe.time,
-      ingridients: ingredients,
-      instruction: instructions,
-      tags: tags,
-      created_at: Date.now(),
-      created_by: userId,
-      is_private: false,
-    };
-    //ustawienie zmiennych
-    setRecipe({ ...recipe, ingredients: ingredients });
-    setRecipe({ ...recipe, instruction: instructions });
-    setRecipe({ ...recipe, tags: tags });
-    setRecipe({ ...recipe, created_by: userId });
-    console.log(dummyRecipe);
-    const token = localStorage.getItem("token");
-    try {
-      const config = {
-        method: "post",
-        url: "http://localhost:8080/api/recipes",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token,
-        },
-        data: dummyRecipe,
-      };
-      const { data: res } = await axios(config);
-
-      console.log(res.message);
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
-        setError(error.response.data.message);
-      }
-    }
+  const handleUpdate = () => {
+    const _id = id;
+    const created_at = Date.now();
+    const created_by = userId;
+    const is_private = isPrivate;
+    onSubmit({
+      _id,
+      title,
+      description,
+      time,
+      ingridients,
+      instruction,
+      tags,
+      is_private,
+      created_at,
+      created_by,
+    });
   };
 
   return (
     <>
       <div className="recipeForm">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(event) => event.preventDefault()}>
           <label htmlFor="title">Tytuł:</label>
           <input
             id="title"
             type="text"
             name="title"
             placeholder="Tytul"
-            onChange={handleChange}
-            value={recipe.title}
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
             required
           ></input>
           <label htmlFor="description">Tytuł:</label>
@@ -149,8 +199,8 @@ const RecipeForm = ({ user }) => {
             type="text"
             name="description"
             placeholder="opis"
-            onChange={handleChange}
-            value={recipe.description}
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
             required
           ></input>
           <input
@@ -158,12 +208,12 @@ const RecipeForm = ({ user }) => {
             type="text"
             name="time"
             placeholder="czas"
-            onChange={handleChange}
-            value={recipe.time}
+            onChange={(e) => setTime(e.target.value)}
+            value={time}
             required
           ></input>
           <p>Skladniki</p>
-          {ingredients.map((input, index) => {
+          {ingridients.map((input, index) => {
             return (
               <div key={index}>
                 <input
@@ -204,7 +254,7 @@ const RecipeForm = ({ user }) => {
             Dodaj więcej składników
           </button>
           <p>Instrukcja</p>
-          {instructions.map((input, index) => {
+          {instruction.map((input, index) => {
             return (
               <div key={index}>
                 <label>{index + 1 + "."}</label>
@@ -254,11 +304,21 @@ const RecipeForm = ({ user }) => {
               type="checkbox"
               name="privacy"
               value="private"
-              onChange={() => setIsPrivate(true)}
+              onChange={() => setIsPrivate((state) => !state)}
             />
             <label htmlFor="privacy">Private</label>
           </div>
-          <button type="submit">Submit</button>
+          {!isUpdate && (
+            <button type="submit" onClick={handleSubmit}>
+              Wyślij
+            </button>
+          )}
+          <button type="reset">Clear</button>
+          {isUpdate && (
+            <button type="submit" onClick={handleUpdate}>
+              Zatwierdź zmiany
+            </button>
+          )}
         </form>
       </div>
     </>

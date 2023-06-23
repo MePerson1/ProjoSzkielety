@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 const recipeSchema = new mongoose.Schema({
+  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
   time: { type: Number, required: true },
   ingridients: [
     {
+      _id: false, // Disable the _id property
       name: { type: String, required: true },
       quantity: { type: Number, required: true },
       measure: { type: String, required: true },
@@ -22,6 +24,7 @@ const Recipe = mongoose.model("Recipe", recipeSchema);
 
 const validate = (data) => {
   const schema = Joi.object({
+    _id: Joi.string(),
     title: Joi.string().required().label("Title"),
     description: Joi.string().required().label("Description"),
     time: Joi.number().required(),
