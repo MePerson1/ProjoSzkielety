@@ -30,7 +30,7 @@ const Login = () => {
       <div className={styles.login_form_container}>
         <div className={styles.left}>
           <form className={styles.form_container} onSubmit={handleSubmit}>
-            <h1>Login to Your Account</h1>
+            <h1>Zaloguj się</h1>
             <input
               type="email"
               placeholder="Email"
@@ -42,7 +42,7 @@ const Login = () => {
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Hasło"
               name="password"
               onChange={handleChange}
               value={data.password}
@@ -51,15 +51,15 @@ const Login = () => {
             />
             {error && <div className={styles.error_msg}>{error}</div>}
             <button type="submit" className={styles.green_btn}>
-              Sing In
+              Zaloguj się
             </button>
           </form>
         </div>
         <div className={styles.right}>
-          <h1>New Here ?</h1>
+          <h1>Jesteś tu now?</h1>
           <Link to="/signup">
             <button type="button" className={styles.white_btn}>
-              Sing Up
+              Zarejestruj się
             </button>
           </Link>
         </div>

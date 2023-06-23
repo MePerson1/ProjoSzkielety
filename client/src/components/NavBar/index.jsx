@@ -19,7 +19,6 @@ const NavBar = ({ token, handleLogout }) => {
           Dodaj przepis
         </Link>
       )}
-      {token && <Link className={styles.white_btn}>Konto</Link>}
       {!token && (
         <Link to="login" className={styles.white_btn}>
           Zaloguj

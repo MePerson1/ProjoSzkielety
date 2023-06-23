@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import style from "./styles.module.css";
 const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
   const tags = recipe.tags;
   let navigate = useNavigate();
@@ -31,6 +32,8 @@ const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
 
           console.log(res.message);
           window.location.reload();
+          navigate("/");
+          navigate("/yours");
         } catch (error) {
           if (
             error.response &&
@@ -49,16 +52,44 @@ const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
     navigate("/form");
   };
   return (
-    <div class="bg-slate-400 p-3 border border-2 border-black">
-      <p>{recipe.title}</p>
-      <p>{recipe._id}</p>
-      {tags.map((tag) => {
-        return <p>{tag}</p>;
-      })}
-      <div>
-        <button onClick={handleDetails}>Sczegóły</button>
-        {user && <button onClick={handleRemoveRecipe}>Usuń</button>}
-        {user && <button onClick={handleUpdateRecipe}>Edytuj</button>}
+    <div className="p-3 ml-28 w-96 border border-orange-900 rounded-xl">
+      <h2 className="text-3xl text-center bg-orange-100 justify-center content-center">
+        {recipe.title}
+      </h2>
+      <p className="text-center font-semibold">Czas: {recipe.time} min</p>
+      <div className="flex p-2 bg-orange-700 bg-transparent rounded">
+        <p className="text-white">Tagi:</p>
+        {tags.map((tag) => {
+          return (
+            <p className="bg-white m-2 p-1 rounded w-min border border-black border-">
+              {tag}
+            </p>
+          );
+        })}
+      </div>
+      <div className="flex justify-center space-x-4 mt-4">
+        <button
+          onClick={handleDetails}
+          className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded"
+        >
+          Sczegóły
+        </button>
+        {user && (
+          <button
+            onClick={handleRemoveRecipe}
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
+          >
+            Usuń
+          </button>
+        )}
+        {user && (
+          <button
+            onClick={handleUpdateRecipe}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+          >
+            Edytuj
+          </button>
+        )}
       </div>
     </div>
   );

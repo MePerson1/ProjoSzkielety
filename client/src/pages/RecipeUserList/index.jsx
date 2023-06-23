@@ -2,14 +2,41 @@ import RecipeRow from "../RecipeRow";
 import axios from "axios";
 import styles from "./styles.module.css";
 import { useEffect, useState } from "react";
-const RecipeUserList = ({ user, setRecipe, setRecipieDetails }) => {
+const RecipeUserList = ({ setRecipe, setRecipieDetails }) => {
   const [userRecipies, setUserRecipies] = useState(null);
   const token = localStorage.getItem("token");
+  const [loggedUser, setLogged] = useState(null);
   useEffect(() => {
-    if (user) {
+    const url = "http://localhost:8080/api/users/info";
+    const headers = {
+      "Content-Type": "application/json",
+      "x-access-token": token,
+    };
+
+    axios
+      .get(url, { headers })
+      .then((res) => {
+        const data = res.data;
+        console.log(data);
+        setLogged(data);
+        console.log(loggedUser);
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.status >= 400 &&
+          error.response.status <= 500
+        ) {
+          console.log("nie dziala!");
+          localStorage.removeItem("token");
+          window.location.reload();
+        }
+      });
+
+    if (loggedUser) {
       const config = {
         method: "get",
-        url: `http://localhost:8080/api/recipes/${user._id}/user`,
+        url: `http://localhost:8080/api/recipes/${loggedUser._id}/user`,
         headers: {
           "Content-Type": "application/json",
           "x-access-token": token,
@@ -37,10 +64,10 @@ const RecipeUserList = ({ user, setRecipe, setRecipieDetails }) => {
   return (
     <>
       <div className={styles.heading}>
-        {user ? <p>Twoje przepisy</p> : <p>Przepisy</p>}
+        {loggedUser ? <p>Twoje przepisy</p> : <p>Przepisy</p>}
       </div>
 
-      <div>
+      <div className="flex">
         {userRecipies &&
           userRecipies.map((recipe) => {
             return (
@@ -48,7 +75,7 @@ const RecipeUserList = ({ user, setRecipe, setRecipieDetails }) => {
                 key={recipe._id}
                 value={recipe._id}
                 recipe={recipe}
-                user={user}
+                user={loggedUser}
                 setRecipieDetails={setRecipieDetails}
                 setRecipe={setRecipe}
               />

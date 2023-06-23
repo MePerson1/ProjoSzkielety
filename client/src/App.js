@@ -92,6 +92,7 @@ function App() {
     axios(config)
       .then((res) => {
         setRecipe(null);
+        window.location.reload();
       })
       .catch((error) => {
         if (
@@ -110,19 +111,21 @@ function App() {
     if (!recipe) {
       return;
     }
-    if (!recipe) {
-      return;
-    }
     const token = localStorage.getItem("token");
+    const recipeId = recipe._id; // Get the recipe ID
+    const url = `http://localhost:8080/api/recipes/${recipeId}`; // Construct the URL
+
     const config = {
-      url: `http://localhost:8080/api/recipes/${recipe._id}`,
+      method: "put",
+      url: url, // Pass the URL as a separate argument
       headers: {
         "x-access-token": token,
       },
       data: recipe,
     };
+
     axios
-      .put(config)
+      .request(config) // Use axios.request() instead of axios.put()
       .then((res) => {
         setRecipe(null);
       })
@@ -138,6 +141,7 @@ function App() {
         }
       });
   };
+
   const onClear = () => {
     setRecipe(null);
   };

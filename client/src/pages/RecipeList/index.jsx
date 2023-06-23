@@ -40,22 +40,10 @@ const RecipeList = ({ recipies, user, setRecipieDetails }) => {
         {user ? <p>Twoje przepisy</p> : <p>Przepisy</p>}
       </div>
 
-      <div>
+      <div className="flex p-3">
         {recipies &&
           !userRecipies &&
           recipies.map((recipe) => {
-            return (
-              <RecipeRow
-                key={recipe._id}
-                value={recipe._id}
-                recipe={recipe}
-                user={user}
-                setRecipieDetails={setRecipieDetails}
-              />
-            );
-          })}
-        {userRecipies &&
-          userRecipies.map((recipe) => {
             return (
               <RecipeRow
                 key={recipe._id}

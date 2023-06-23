@@ -78,12 +78,10 @@ router.get("/:id/user", async (req, res) => {
 });
 
 // Trasa do aktualizacji przepisu
-router.patch("/:id", async (req, res) => {
-  console.log(req.params.id);
-  console.log(req.data);
+router.put("/:id", async (req, res) => {
   try {
-    const recipeId = req.params.id; // ID of the recipe to update
-    const updatedRecipeData = req.data; // Updated recipe data
+    const recipeId = req.params.id;
+    const updatedRecipeData = req.body;
 
     // Check if the updated recipe data is provided
     if (!updatedRecipeData) {

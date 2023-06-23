@@ -34,7 +34,7 @@ const Signup = () => {
     <div className={styles.signup_container}>
       <div className={styles.signup_form_container}>
         <div className={styles.left}>
-          <h1>Welcome Back</h1>
+          <h1>Witamy!</h1>
           <Link to="/login">
             <button type="button" className={styles.white_btn}>
               Sing in
@@ -43,10 +43,10 @@ const Signup = () => {
         </div>
         <div className={styles.right}>
           <form className={styles.form_container} onSubmit={handleSubmit}>
-            <h1>Create Account</h1>
+            <h1>Stwórz konto</h1>
             <input
               type="text"
-              placeholder="User Name"
+              placeholder="Nazwa użytkownika"
               name="username"
               onChange={handleChange}
               value={data.username}
@@ -64,7 +64,7 @@ const Signup = () => {
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Haslo"
               name="password"
               onChange={handleChange}
               value={data.password}
@@ -73,7 +73,7 @@ const Signup = () => {
             />
             {error && <div className={styles.error_msg}>{error}</div>}
             <button type="submit" className={styles.green_btn}>
-              Sing Up
+              Zarejestruj się
             </button>
           </form>
         </div>
