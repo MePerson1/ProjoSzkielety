@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import axios from "axios";
-const RecipeForm = (props) => {
-  const userId = props.user._id;
+const RecipeForm = ({ user }) => {
+  const userId = user._id;
   const [ingredients, setIngredients] = useState([
     { name: "", quantity: 0, measure: "" },
     { name: "", quantity: 0, measure: "" },

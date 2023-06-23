@@ -102,17 +102,21 @@ router.put("/:id", async (req, res) => {
 });
 
 // Trasa do usuwania przepisu
-router.delete("/:id", async (req, res) => {
+router.delete("/", async (req, res) => {
   try {
+    console.log(req.body.recipe._id);
     // Usunięcie przepisu na podstawie identyfikatora (id)
-    const recipe = await Recipe.findByIdAndDelete(req.params.id);
 
+    const recipe = await Recipe.findByIdAndDelete(req.body.recipe._id);
+    console.log("dziala");
     if (!recipe) {
+      console.log("nie dziala");
       return res.status(404).send({ message: "Recipe not found" });
     }
 
     res.status(200).send({ message: "Recipe deleted successfully" });
   } catch (error) {
+    console.log("nie dziala");
     res.status(500).send({ message: "Internal Server Error" });
   }
 });

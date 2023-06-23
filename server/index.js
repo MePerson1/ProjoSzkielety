@@ -19,8 +19,10 @@ connection();
 
 //Autoryzacja
 app.get("/api/users/", tokenVerification);
+app.delete("/api/users/", tokenVerification);
 app.get("/api/users/info", tokenVerification);
 app.post("/api/recipes", tokenVerification);
+app.delete("/api/recipes", tokenVerification);
 app.get("/api/recipes/:id/user", tokenVerification);
 
 //user

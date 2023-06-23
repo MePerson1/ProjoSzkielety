@@ -3,8 +3,8 @@ import Users from "./components/Users";
 import Info from "./components/Info";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import RecipeList from "./components/RecipeList";
-import RecipeForm from "./components/RecipeForm";
+import RecipeList from "../../pages/RecipeList";
+import RecipeForm from "../../pages/RecipeForm";
 const Main = () => {
   const [dane, ustawDane] = useState([]);
   const [userRecipes, setUserRecipes] = useState([]);
@@ -12,6 +12,7 @@ const Main = () => {
   const [form, setForm] = useState(false);
   const [user, setUser] = useState(null);
 
+  //pobieranie usera
   useEffect(() => {
     //pobierz token z localStorage:
     const token = localStorage.getItem("token");
@@ -45,7 +46,6 @@ const Main = () => {
     }
   }, []);
 
-  const handleGetUser = () => {};
   const handleGetUsers = async (e) => {
     e.preventDefault();
     ustawInfo(null);
@@ -81,6 +81,7 @@ const Main = () => {
     }
   };
 
+  //usuniecie usera
   const handleDelete = async (e) => {
     e.preventDefault();
     //pobierz token z localStorage:
@@ -117,6 +118,7 @@ const Main = () => {
       }
     }
   };
+  //pobranie wszystkich przepisow
   const handleGetRecipes = async (e) => {
     e.preventDefault();
     setForm(false);
@@ -153,11 +155,14 @@ const Main = () => {
       }
     }
   };
+
+  //przejscie do formularza ale trzeba to zmienic XD
   const handleRecipeForm = () => {
     ustawDane([]);
     setForm(true);
   };
-  //potrzebuje zeby useeffect pobieral dane o userze i guess
+
+  //przepisy uzytkownika
   const handleUserRecipes = async (e) => {
     e.preventDefault();
     setForm(false);
@@ -171,6 +176,10 @@ const Main = () => {
         const config = {
           method: "get",
           url: `http://localhost:8080/api/recipes/${user._id}/user`,
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
         };
         //wysłanie żądania o dane:
         const { data: res } = await axios(config);
@@ -189,17 +198,21 @@ const Main = () => {
       }
     }
   };
+
+  //wylogowanie
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.reload();
   };
+
+  const handleDetails = (someRecipe) => {};
   return (
     <div className={styles.main_container}>
-      <nav className={styles.navbar}>
+      {/* <nav className={styles.navbar}>
         <img className={styles.logo} src="logo.png" alt="logo" />
-        <button className={styles.white_btn} onClick={handleGetRecipes}>
+        <Link className={styles.white_btn} onClick={handleGetRecipes}>
           Przepisy
-        </button>
+        </Link>
         <button className={styles.white_btn} onClick={handleUserRecipes}>
           Twoje przepisy
         </button>
@@ -212,7 +225,8 @@ const Main = () => {
         <button className={styles.white_btn} onClick={handleLogout}>
           Wyloguj
         </button>
-      </nav>
+      </nav> */}
+
       {dane.length > 0 ? (
         <RecipeList className="bg-yellow" recipes={dane} />
       ) : (
@@ -221,7 +235,7 @@ const Main = () => {
       {info != null ? <Info info={info} /> : <p></p>}
       {form && <RecipeForm user={user} />}
       {userRecipes.length > 0 && (
-        <RecipeList recipes={userRecipes} user={user} />
+        <RecipeList recipes={userRecipes} userName={user.username} />
       )}
     </div>
   );
