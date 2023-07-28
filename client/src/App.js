@@ -1,4 +1,11 @@
-import { Route, Routes, Navigate, Link, NavLink } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  Navigate,
+  Link,
+  NavLink,
+  useNavigate,
+} from "react-router-dom";
 import Main from "./components/Main";
 import NavBar from "./components/NavBar";
 import Signup from "./pages/Signup";
@@ -12,6 +19,7 @@ import { useState, useEffect } from "react";
 import RecipeForm from "./pages/RecipeForm";
 import RecipeUserList from "./pages/RecipeUserList";
 function App() {
+  const navigator = useNavigate();
   const token = localStorage.getItem("token");
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -93,16 +101,13 @@ function App() {
       .then((res) => {
         setRecipe(null);
         window.location.reload();
+        navigator("/yours");
       })
       .catch((error) => {
-        if (
-          error.response &&
-          error.response.status >= 400 &&
-          error.response.status <= 500
-        ) {
-          console.log("nie dziala!");
-          // localStorage.removeItem("token");
-          // window.location.reload();
+        if (error.response.status == 401) {
+          console.log("Nie dozwolone!");
+          localStorage.removeItem("token");
+          window.location.reload();
         }
       });
   };
@@ -130,14 +135,10 @@ function App() {
         setRecipe(null);
       })
       .catch((error) => {
-        if (
-          error.response &&
-          error.response.status >= 400 &&
-          error.response.status <= 500
-        ) {
+        if (error.response.status == 401) {
           console.log("nie dziala!");
-          // localStorage.removeItem("token");
-          // window.location.reload();
+          localStorage.removeItem("token");
+          window.location.reload();
         }
       });
   };

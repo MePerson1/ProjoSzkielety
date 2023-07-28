@@ -3,40 +3,13 @@ import axios from "axios";
 import styles from "./styles.module.css";
 import { useEffect, useState } from "react";
 const RecipeUserList = ({ setRecipe, setRecipieDetails }) => {
-  const [userRecipies, setUserRecipies] = useState(null);
+  const [userRecipies, setUserRecipies] = useState([]);
   const token = localStorage.getItem("token");
-  const [loggedUser, setLogged] = useState(null);
   useEffect(() => {
-    const url = "http://localhost:8080/api/users/info";
-    const headers = {
-      "Content-Type": "application/json",
-      "x-access-token": token,
-    };
-
-    axios
-      .get(url, { headers })
-      .then((res) => {
-        const data = res.data;
-        console.log(data);
-        setLogged(data);
-        console.log(loggedUser);
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.status >= 400 &&
-          error.response.status <= 500
-        ) {
-          console.log("nie dziala!");
-          localStorage.removeItem("token");
-          window.location.reload();
-        }
-      });
-
-    if (loggedUser) {
+    if (token) {
       const config = {
         method: "get",
-        url: `http://localhost:8080/api/recipes/${loggedUser._id}/user`,
+        url: "http://localhost:8080/api/recipes/userRecipes",
         headers: {
           "Content-Type": "application/json",
           "x-access-token": token,
@@ -64,7 +37,7 @@ const RecipeUserList = ({ setRecipe, setRecipieDetails }) => {
   return (
     <>
       <div className={styles.heading}>
-        {loggedUser ? <p>Twoje przepisy</p> : <p>Przepisy</p>}
+        <p>Twoje przepisy</p>
       </div>
 
       <div className="flex">
@@ -75,13 +48,13 @@ const RecipeUserList = ({ setRecipe, setRecipieDetails }) => {
                 key={recipe._id}
                 value={recipe._id}
                 recipe={recipe}
-                user={loggedUser}
+                token={token}
                 setRecipieDetails={setRecipieDetails}
                 setRecipe={setRecipe}
               />
             );
           })}
-        {!userRecipies && <h2>Pusto, dodaj nowy przpis</h2>}
+        {!userRecipies && <h2>Pusto</h2>}
       </div>
     </>
   );

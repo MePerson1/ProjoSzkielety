@@ -54,6 +54,7 @@ const RecipeList = ({ recipies, user, setRecipieDetails }) => {
               />
             );
           })}
+        {!recipies && <p>Brak przepisow!</p>}
       </div>
     </>
   );

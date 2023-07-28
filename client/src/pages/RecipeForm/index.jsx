@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import axios from "axios";
 const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
-  const userId = user._id;
+  const [userId,setUserId] = useState("");
   let navigate = useNavigate();
   const [ingridients, setIngredients] = useState([
     { name: "", quantity: 0, measure: "" },
@@ -20,7 +20,8 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
   const isUpdate = id !== 0;
   useEffect(() => {
     if (recipe) {
-      setId(recipe._id);
+      if(recipe._id)
+      {setId(recipe._id);}
       setTitle(recipe.title);
       setDescription(recipe.description);
       setTime(recipe.time);
@@ -40,6 +41,10 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
       setInstruction([""]);
       setTags([""]);
       setIsPrivate(false);
+    }
+    if(user)
+    {
+      setUserId(user._id);
     }
   }, []);
   const handleAddIngredientInput = () => {
@@ -111,9 +116,21 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
       created_by,
     });
 
-    navigate("/yours");
   };
 
+  const handleClear = () =>{
+    setTitle("");
+      setDescription("");
+      setTime(0);
+      setIngredients([
+        { name: "", quantity: 0, measure: "" },
+        { name: "", quantity: 0, measure: "" },
+      ]);
+      setInstruction([""]);
+      setTags([""]);
+      setIsPrivate(false);
+      onClear();
+  }
   const handleUpdate = () => {
     const _id = id;
     const created_at = Date.now();
@@ -294,15 +311,15 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
           </label>
         </div>
         {!isUpdate && (
-          <button type="submit" onClick={handleSubmit} className="btnSubmit">
+          <button type="submit" onClick={handleSubmit} className="bg-green-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
             Wyślij
           </button>
         )}
-        <button type="reset" className="btnReset">
+        <button type="reset" onClick={handleClear} className="bg-red-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
           Wyczyść
         </button>
         {isUpdate && (
-          <button type="submit" onClick={handleUpdate} className="btnSubmit">
+          <button type="submit" onClick={handleUpdate} className="bg-green-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
             Zatwierdź zmiany
           </button>
         )}

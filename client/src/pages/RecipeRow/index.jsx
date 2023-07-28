@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./styles.module.css";
-const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
+const RecipeRow = ({ recipe, token, setRecipieDetails, setRecipe }) => {
   const tags = recipe.tags;
+  const isLogged = token;
   let navigate = useNavigate();
   const handleDetails = () => {
     if (recipe) {
@@ -33,7 +34,6 @@ const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
           console.log(res.message);
           window.location.reload();
           navigate("/");
-          navigate("/yours");
         } catch (error) {
           if (
             error.response &&
@@ -74,7 +74,7 @@ const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
         >
           Sczegóły
         </button>
-        {user && (
+        {isLogged && (
           <button
             onClick={handleRemoveRecipe}
             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
@@ -82,7 +82,7 @@ const RecipeRow = ({ recipe, user, setRecipieDetails, setRecipe }) => {
             Usuń
           </button>
         )}
-        {user && (
+        {isLogged && (
           <button
             onClick={handleUpdateRecipe}
             className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"

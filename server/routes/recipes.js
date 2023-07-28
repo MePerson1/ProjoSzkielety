@@ -2,6 +2,27 @@ const router = require("express").Router();
 const { Recipe, validate } = require("../models/recipe");
 const { User } = require("../models/user");
 
+router.get("/userRecipes", async (req, res) => {
+  try {
+    console.log("Witaj dziala");
+    let userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const recipes = await Recipe.find({ created_by: userId });
+    if (recipes.length === 0) {
+      return res
+        .status(404)
+        .send({ message: "No recipes found for the user." });
+    }
+
+    res.status(200).send({ data: recipes, message: "Recipes for the user." });
+  } catch (error) {
+    res.status(500).send({ message: error });
+  }
+});
 // Trasa do tworzenia nowego przepisu
 router.post("/", async (req, res) => {
   try {
@@ -58,6 +79,7 @@ router.get("/:id", async (req, res) => {
 //Trasa do pobierania przepisów użytkownika
 router.get("/:id/user", async (req, res) => {
   try {
+    console.log("Witaj nie dziala");
     let userId = req.params.id;
     const user = await User.findById(userId);
     if (!user) {

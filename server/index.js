@@ -18,6 +18,7 @@ const connection = require("./db");
 connection();
 
 //Autoryzacja
+app.get("/api/recipes/userRecipes", tokenVerification);
 app.get("/api/users/", tokenVerification);
 app.delete("/api/users/", tokenVerification);
 app.get("/api/users/info", tokenVerification);
@@ -28,9 +29,10 @@ app.get("/api/recipes/:id/user", tokenVerification);
 //user
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/users/info", userRoutes);
-app.use("/api/users/:userId/favorites/:recipeId", userRoutes);
+//app.use("/api/users/info", userRoutes);
+//app.use("/api/users/:userId/favorites/:recipeId", userRoutes);
 
 //przepisy
+//app.use("/api/recipes/userRecipes", recipeRoutes);
 app.use("/api/recipes", recipeRoutes);
-app.use("/api/recipes/:id/user", recipeRoutes);
+//app.use("/api/recipes/:id/user", recipeRoutes);
