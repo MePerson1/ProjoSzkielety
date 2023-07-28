@@ -28,8 +28,8 @@ const RecipeList = ({ recipies, user, setRecipieDetails }) => {
             error.response.status <= 500
           ) {
             console.log("nie dziala!");
-            // localStorage.removeItem("token");
-            // window.location.reload();
+            localStorage.removeItem("token");
+            window.location.reload();
           }
         });
     }
@@ -44,15 +44,17 @@ const RecipeList = ({ recipies, user, setRecipieDetails }) => {
         {recipies &&
           !userRecipies &&
           recipies.map((recipe) => {
-            return (
-              <RecipeRow
-                key={recipe._id}
-                value={recipe._id}
-                recipe={recipe}
-                user={user}
-                setRecipieDetails={setRecipieDetails}
-              />
-            );
+            if (!recipe.is_private) {
+              return (
+                <RecipeRow
+                  key={recipe._id}
+                  value={recipe._id}
+                  recipe={recipe}
+                  user={user}
+                  setRecipieDetails={setRecipieDetails}
+                />
+              );
+            }
           })}
         {!recipies && <p>Brak przepisow!</p>}
       </div>

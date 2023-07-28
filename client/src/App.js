@@ -100,8 +100,7 @@ function App() {
     axios(config)
       .then((res) => {
         setRecipe(null);
-        window.location.reload();
-        navigator("/yours");
+        navigator("/yours", { replace: true });
       })
       .catch((error) => {
         if (error.response.status == 401) {
@@ -133,6 +132,8 @@ function App() {
       .request(config) // Use axios.request() instead of axios.put()
       .then((res) => {
         setRecipe(null);
+
+        navigator("/yours", { replace: true });
       })
       .catch((error) => {
         if (error.response.status == 401) {
