@@ -1,12 +1,4 @@
-import {
-  Route,
-  Routes,
-  Navigate,
-  Link,
-  NavLink,
-  useNavigate,
-} from "react-router-dom";
-import Main from "./components/Main";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -30,7 +22,7 @@ function App() {
   const [recipies, setRecipies] = useState(null);
   const [user, setUser] = useState(null);
   const [recipe, setRecipe] = useState(null);
-
+  const [error, setError] = useState("");
   useEffect(() => {
     console.log("");
     //konfiguracja zapytania asynchronicznego z tokenem w nagłówku:
@@ -107,6 +99,9 @@ function App() {
           console.log("Nie dozwolone!");
           localStorage.removeItem("token");
           window.location.reload();
+        }
+        if (error.response.status == 400) {
+          setError(error.response.data.message);
         }
       });
   };
@@ -193,6 +188,7 @@ function App() {
               onUpdate={onUpdate}
               recipe={recipe}
               user={user}
+              error={error}
             />
           }
         />

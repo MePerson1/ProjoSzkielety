@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import axios from "axios";
-const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
-  const [userId,setUserId] = useState("");
+const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user, error }) => {
+  const [userId, setUserId] = useState("");
   let navigate = useNavigate();
   const [ingridients, setIngredients] = useState([
     { name: "", quantity: 0, measure: "" },
     { name: "", quantity: 0, measure: "" },
   ]);
-  const [error, setError] = useState("");
   const [instruction, setInstruction] = useState([""]);
   const [tags, setTags] = useState([""]);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -20,8 +19,9 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
   const isUpdate = id !== 0;
   useEffect(() => {
     if (recipe) {
-      if(recipe._id)
-      {setId(recipe._id);}
+      if (recipe._id) {
+        setId(recipe._id);
+      }
       setTitle(recipe.title);
       setDescription(recipe.description);
       setTime(recipe.time);
@@ -42,8 +42,7 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
       setTags([""]);
       setIsPrivate(false);
     }
-    if(user)
-    {
+    if (user) {
       setUserId(user._id);
     }
   }, []);
@@ -115,22 +114,21 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
       created_at,
       created_by,
     });
-
   };
 
-  const handleClear = () =>{
+  const handleClear = () => {
     setTitle("");
-      setDescription("");
-      setTime(0);
-      setIngredients([
-        { name: "", quantity: 0, measure: "" },
-        { name: "", quantity: 0, measure: "" },
-      ]);
-      setInstruction([""]);
-      setTags([""]);
-      setIsPrivate(false);
-      onClear();
-  }
+    setDescription("");
+    setTime(0);
+    setIngredients([
+      { name: "", quantity: 0, measure: "" },
+      { name: "", quantity: 0, measure: "" },
+    ]);
+    setInstruction([""]);
+    setTags([""]);
+    setIsPrivate(false);
+    onClear();
+  };
   const handleUpdate = () => {
     const _id = id;
     const created_at = Date.now();
@@ -152,6 +150,7 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
 
   return (
     <div className="recipeForm bg-orange-100 p-6 rounded-xl shadow-xl">
+      {error && <p>{error}</p>}
       <form onSubmit={(event) => event.preventDefault()} className="space-y-4">
         <label htmlFor="title" className="text-lg text-gray-800">
           Tytuł:
@@ -311,15 +310,27 @@ const RecipeForm = ({ recipe, onClear, onUpdate, onSubmit, user }) => {
           </label>
         </div>
         {!isUpdate && (
-          <button type="submit" onClick={handleSubmit} className="bg-green-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-green-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+          >
             Wyślij
           </button>
         )}
-        <button type="reset" onClick={handleClear} className="bg-red-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+        <button
+          type="reset"
+          onClick={handleClear}
+          className="bg-red-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+        >
           Wyczyść
         </button>
         {isUpdate && (
-          <button type="submit" onClick={handleUpdate} className="bg-green-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+          <button
+            type="submit"
+            onClick={handleUpdate}
+            className="bg-green-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+          >
             Zatwierdź zmiany
           </button>
         )}

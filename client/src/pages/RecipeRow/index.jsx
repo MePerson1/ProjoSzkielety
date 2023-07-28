@@ -33,7 +33,6 @@ const RecipeRow = ({ recipe, token, setRecipieDetails, setRecipe }) => {
 
           console.log(res.message);
           window.location.reload();
-          navigate("/");
         } catch (error) {
           if (
             error.response &&
