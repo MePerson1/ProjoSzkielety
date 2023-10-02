@@ -33,7 +33,7 @@ const RecipeList = ({ recipies, user, setRecipieDetails }) => {
           }
         });
     }
-  }, []);
+  }, [user]);
   return (
     <>
       <div className={styles.heading}>
